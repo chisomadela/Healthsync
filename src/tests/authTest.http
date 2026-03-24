@@ -146,3 +146,69 @@ Authorization: Bearer invalid_token_here
 ### Test: Get Profile - Expired Token (Should Fail - After 7 days)
 GET {{baseUrl}}/auth/profile
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoicGF0aWVudEBleGFtcGxlLmNvbSIsInVzZXJuYW1lIjoiam9obmRvZSIsImlhdCI6MTcwMDAwMDAwMCwiZXhwIjoxNzAwNjA0ODAwfQ.expired_token
+
+### Test: Logout - Successful Logout (Login First and Copy Token)
+# IMPORTANT: First, run "Login - Successful Login with Patient Account" test above
+# Then replace the token below with the token from the login response
+POST {{baseUrl}}/auth/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoicGF0aWVudEBleGFtcGxlLmNvbSIsInVzZXJuYW1lIjoiam9obmRvZSIsImlhdCI6MTcxNDAwMDAwMCwiZXhwIjoxNzE0NjA0ODAwfQ.placeholder
+
+### Test: Logout - Missing Token (Should Fail)
+POST {{baseUrl}}/auth/logout
+
+### Test: Logout - Invalid Token (Should Fail)
+POST {{baseUrl}}/auth/logout
+Authorization: Bearer invalid_token_here
+
+### Test: Doctor Login - Successful Login
+POST {{baseUrl}}/auth/doctor-login
+Content-Type: {{contentType}}
+
+{
+    "email": "doctor@hospital.com",
+    "password": "DoctorPassword123!"
+}
+
+### Test: Doctor Login - Login with Doctor ID
+POST {{baseUrl}}/auth/doctor-login
+Content-Type: {{contentType}}
+d
+{
+    "doctor_id": "DOC001",
+    "password": "hashed_dummy_password"
+}
+
+### Test: Doctor Login - Invalid Email (Should Fail)
+POST {{baseUrl}}/auth/doctor-login
+Content-Type: {{contentType}}
+
+{
+    "email": "nonexistent@hospital.com",
+    "password": "SomePassword123!"
+}
+
+### Test: Doctor Login - Invalid Doctor ID (Should Fail)
+POST {{baseUrl}}/auth/doctor-login
+Content-Type: {{contentType}}
+
+{
+    "doctor_id": "INVALID_ID",
+    "password": "SomePassword123!"
+}
+
+### Test: Doctor Login - Wrong Password (Should Fail)
+POST {{baseUrl}}/auth/doctor-login
+Content-Type: {{contentType}}
+
+{
+    "email": "doctor@hospital.com",
+    "password": "WrongPassword123!"
+}
+
+### Test: Doctor Login - Missing Credentials (Should Fail)
+POST {{baseUrl}}/auth/doctor-login
+Content-Type: {{contentType}}
+
+{
+    "email": "doctor@hospital.com"
+}

@@ -63,4 +63,51 @@ function generateJWT(userId, email, username) {
   return token;
 }
 
-export { userExists, getUserByEmail, getUserById, generateJWT };
+async function getDoctorByEmail(email) {
+  const { data, error } = await db
+    .from("doctors")
+    .select("*")
+    .eq("email", email)
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Error fetching doctor:", error);
+    throw error;
+  }
+
+  return data;
+}
+
+async function getDoctorByDoctorId(doctor_id) {
+  const { data, error } = await db
+    .from("doctors")
+    .select("*")
+    .eq("doctor_id", doctor_id)
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Error fetching doctor by doctor_id:", error);
+    throw error;
+  }
+
+  return data;
+}
+
+function generateDoctorJWT(doctorData) {
+  const token = jwt.sign(
+    {
+      doctor_id: doctorData.doctor_id,
+      email: doctorData.email,
+      first_name: doctorData.first_name,
+      last_name: doctorData.last_name,
+      specialty: doctorData.specialty,
+    },
+    JWT_SECRET,
+    { expiresIn: "7d" }
+  );
+  return token;
+}
+
+export { userExists, getUserByEmail, getUserById, generateJWT, getDoctorByEmail, getDoctorByDoctorId, generateDoctorJWT };

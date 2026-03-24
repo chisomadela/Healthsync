@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { db } from "../config/supabase.js";
-import { userExists, getUserByEmail, getUserById, generateJWT } from "../utils/authUtils.js";
+import { userExists, getUserByEmail, getUserById, generateJWT, getDoctorByEmail, getDoctorByDoctorId, generateDoctorJWT } from "../utils/authUtils.js";
 import protectedRoute from "../middleware/protectedRoute.js";
 import bcrypt from "bcrypt";
 
@@ -166,6 +166,68 @@ auth.get("/profile", protectedRoute, async (req, res) => {
     });
   } catch (err) {
     console.error("Profile error:", err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+auth.post("/logout", protectedRoute, async (req, res) => {
+  try {
+    return res.status(200).json({
+      message: "Logout successful. Please remove the token from client storage.",
+    });
+  } catch (err) {
+    console.error("Logout error:", err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+auth.post("/doctor-login", async (req, res) => {
+  const { doctor_id, email, password } = req.body;
+
+  if (!password || (!doctor_id && !email)) {
+    return res.status(400).json({
+      message: "Password is required. Provide either doctor_id or email.",
+    });
+  }
+
+  try {
+    let doctor;
+
+    if (doctor_id) {
+      doctor = await getDoctorByDoctorId(doctor_id);
+    } else {
+      doctor = await getDoctorByEmail(email);
+    }
+
+    if (!doctor) {
+      return res
+        .status(401)
+        .json({ message: "Invalid credentials (doctor_id/email or password)" });
+    }
+
+    const isPasswordValid = password === doctor.password;
+
+    if (!isPasswordValid) {
+      return res
+        .status(401)
+        .json({ message: "Invalid credentials (doctor_id/email or password)" });
+    }
+
+    const token = generateDoctorJWT(doctor);
+
+    return res.status(200).json({
+      message: "Doctor login successful",
+      doctor: {
+        doctor_id: doctor.doctor_id,
+        email: doctor.email,
+        first_name: doctor.first_name,
+        last_name: doctor.last_name,
+        specialty: doctor.specialty,
+      },
+      token,
+    });
+  } catch (err) {
+    console.error("Doctor login error:", err);
     return res.status(500).json({ message: "Internal server error" });
   }
 });

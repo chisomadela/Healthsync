@@ -510,6 +510,141 @@ curl http://localhost:3000/auth/profile \
                     </div>
                 </div>
             </div>
+
+            <!-- Logout Endpoint -->
+            <div class="endpoint post">
+                <h3>
+                    <span class="method post">POST</span>
+                    <span class="route">/auth/logout</span>
+                </h3>
+                <div class="description">Logout the authenticated user and invalidate session</div>
+
+                <div class="note">
+                    <strong>Authentication Required:</strong> Include JWT token in Authorization header
+                </div>
+
+                <div class="section">
+                    <h4>Headers</h4>
+                    <div class="params">
+                        <div class="param-item">
+                            <span class="param-name">Authorization</span>
+                            <span class="param-type">string</span>
+                            <span class="param-required">required</span>
+                            <div>Format: Bearer &lt;token&gt;</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h4>Request Example</h4>
+                    <div class="code-block">
+curl -X POST http://localhost:3000/auth/logout \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h4>Response</h4>
+                    <span class="response-code success">200 OK</span>
+                    <div class="code-block json">
+{
+  "message": "Logout successful. Please remove the token from client storage."
+}
+                    </div>
+                </div>
+
+                <div class="note">
+                    <strong>Note:</strong> After successful logout, remove the token from client storage (localStorage, sessionStorage, or cookies). The token remains valid on the server for its expiration period (7 days), so store security is important.
+                </div>
+            </div>
+
+            <!-- Doctor Login Endpoint -->
+            <div class="endpoint post">
+                <h3>
+                    <span class="method post">POST</span>
+                    <span class="route">/auth/doctor-login</span>
+                </h3>
+                <div class="description">Authenticate doctor and receive JWT token. Doctors are pre-registered in the system and can login with either doctor_id or email along with password.</div>
+
+                <div class="section">
+                    <h4>Request Body</h4>
+                    <div class="params">
+                        <div class="param-item">
+                            <span class="param-name">doctor_id</span>
+                            <span class="param-type">string</span>
+                            <div>Doctor's unique identifier (alternative to email)</div>
+                        </div>
+                        <div class="param-item">
+                            <span class="param-name">email</span>
+                            <span class="param-type">string</span>
+                            <div>Doctor's registered email address (alternative to doctor_id)</div>
+                        </div>
+                        <div class="param-item">
+                            <span class="param-name">password</span>
+                            <span class="param-type">string</span>
+                            <span class="param-required">required</span>
+                            <div>Doctor's password (verified against database)</div>
+                        </div>
+                    </div>
+                    <div class="note" style="margin-top: 1rem;">
+                        <strong>Note:</strong> Provide either <code>doctor_id</code> or <code>email</code>, not both. Both are optional individually, but at least one must be provided along with password.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h4>Request Examples</h4>
+                    <p><strong>Login with email:</strong></p>
+                    <div class="code-block json">
+{
+  "email": "doctor@hospital.com",
+  "password": "DoctorPassword123!"
+}
+                    </div>
+                    <p style="margin-top: 1rem;"><strong>Login with doctor_id:</strong></p>
+                    <div class="code-block json">
+{
+  "doctor_id": "DOC001",
+  "password": "DoctorPassword123!"
+}
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h4>Response</h4>
+                    <span class="response-code success">200 OK</span>
+                    <div class="code-block json">
+{
+  "message": "Doctor login successful",
+  "doctor": {
+    "doctor_id": "DOC001",
+    "email": "doctor@hospital.com",
+    "first_name": "John",
+    "last_name": "Smith",
+    "specialty": "Cardiology"
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h4>Error Responses</h4>
+                    <div class="responses">
+                        <div class="response-item">
+                            <span class="response-code error">400 Bad Request</span>
+                            <div>Missing password or both doctor_id and email</div>
+                        </div>
+                        <div class="response-item">
+                            <span class="response-code error">401 Unauthorized</span>
+                            <div>Invalid credentials (doctor_id/email or password)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="note">
+                    <strong>Note:</strong> JWT token contains doctor ID (doctor_id), email, first name, last name, and specialty. Doctors must be pre-registered in the system before they can login.
+                </div>
+            </div>
         </div>
 
         <div class="intro">
@@ -540,6 +675,7 @@ curl http://localhost:3000/auth/profile \
                 <li><strong>User Login:</strong> POST /auth/login with email & password → Receive JWT token</li>
                 <li><strong>Access Protected Routes:</strong> Include token in Authorization header</li>
                 <li><strong>Get Profile:</strong> GET /auth/profile with valid token → Access user information</li>
+                <li><strong>User Logout:</strong> POST /auth/logout with token → Remove token from client storage</li>
             </ol>
         </div>
     </div>
