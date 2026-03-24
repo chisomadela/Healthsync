@@ -24,6 +24,7 @@ Content-Type: {{contentType}}
     "role": "patient"
 }
 
+
 ### Test: Signup - Create Doctor Account
 POST {{baseUrl}}/auth/signup
 Content-Type: {{contentType}}
@@ -131,9 +132,7 @@ Content-Type: {{contentType}}
     "email": "patient@example.com"
 }
 
-### Test: Get Profile - Get User Info With Valid Token (Login First and Copy Token)
-# IMPORTANT: First, run "Login - Successful Login with Patient Account" test above
-# Then replace the token below with the token from the login response
+### Test: Get Profile - Valid Token (Should Succeed)
 GET {{baseUrl}}/auth/profile
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoicGF0aWVudEBleGFtcGxlLmNvbSIsInVzZXJuYW1lIjoiam9obmRvZSIsImlhdCI6MTc3NDM3NDk2NCwiZXhwIjoxNzc0OTc5NzY0fQ.VHNjEBDq9tGVOTUJ8frikDj0Zc94kVrRoTWJgEELbPc
 
