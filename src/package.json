@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/hakisolos/Healthsync#readme",
   "dependencies": {
+    "@google/genai": "^1.46.0",
     "@supabase/supabase-js": "^2.100.0",
     "bcrypt": "^6.0.0",
     "dotenv": "^17.3.1",

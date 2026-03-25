@@ -172,7 +172,7 @@ Content-Type: {{contentType}}
 ### Test: Doctor Login - Login with Doctor ID
 POST {{baseUrl}}/auth/doctor-login
 Content-Type: {{contentType}}
-d
+
 {
     "doctor_id": "DOC001",
     "password": "hashed_dummy_password"

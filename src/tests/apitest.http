@@ -1,0 +1,90 @@
+### HealthSync AI Recommendation API Tests
+
+@baseUrl = http://localhost:3000
+@contentType = application/json
+
+### Test: Check AI Service is Running
+GET {{baseUrl}}/ai
+
+### Test: Patient Signup (Save token for testing)
+POST {{baseUrl}}/auth/signup
+Content-Type: {{contentType}}
+
+{
+  "email": "apatient@example.com",
+  "username": "apatient",
+  "password": "PatientPassword123!",
+  "first_name": "Alice",
+  "last_name": "Johnson",
+  "middle_name": "Grace",
+  "phone": "+2348098765432",
+  "date_of_birth": "1990-05-20",
+  "sex": "Female",
+  "address": "Lagos, Nigeria",
+  "role": "patient"
+}
+
+### 
+@patientToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEzLCJlbWFpbCI6ImFwYXRpZW50QGV4YW1wbGUuY29tIiwidXNlcm5hbWUiOiJhcGF0aWVudCIsImlhdCI6MTc3NDQ0MDY4MiwiZXhwIjoxNzc1MDQ1NDgyfQ.R4O5rsNUQCJV8Sf5IOhn9mRHDCRJdJ-M3DSmAi2mwwE
+
+### Test: AI Recommendation - Chest Pain Symptoms
+POST {{baseUrl}}/ai/aiRecommendation
+Authorization: Bearer {{patientToken}}
+Content-Type: {{contentType}}
+
+{
+  "symptoms": "I have been experiencing severe chest pain for the past 3 days. The pain is sharp and worsens when I breathe deeply. I also feel short of breath and have mild fever."
+}
+
+### Test: AI Recommendation - Child Fever with Rash
+POST {{baseUrl}}/ai/aiRecommendation
+Authorization: Bearer {{patientToken}}
+Content-Type: {{contentType}}
+
+{
+  "symptoms": "My 2-month-old baby has been running a fever for 5 days with a rash all over the body. The baby refuses to feed. Fever reduces with paracetamol but comes back after 4 hours."
+}
+
+### Test: AI Recommendation - Joint Pain and Stiffness
+POST {{baseUrl}}/ai/aiRecommendation
+Authorization: Bearer {{patientToken}}
+Content-Type: {{contentType}}
+
+{
+  "symptoms": "I have severe pain and stiffness in my knees and lower back for the past month. I was involved in a motorcycle accident 2 months ago. The pain is worse in the morning and improves slightly with movement."
+}
+
+### Test: AI Recommendation - Skin Issues
+POST {{baseUrl}}/ai/aiRecommendation
+Authorization: Bearer {{patientToken}}
+Content-Type: {{contentType}}
+
+{
+  "symptoms": "I have developed persistent itchy rashes on my face and neck for the past 2 weeks. The rashes are red and sometimes feel painful. They get worse after applying certain cosmetics."
+}
+
+### Test: Error - Missing Authorization Token
+POST {{baseUrl}}/ai/aiRecommendation
+Content-Type: {{contentType}}
+
+{
+  "symptoms": "I have chest pain"
+}
+
+### Test: Error - Empty Symptoms
+POST {{baseUrl}}/ai/aiRecommendation
+Authorization: Bearer {{patientToken}}
+Content-Type: {{contentType}}
+
+{
+  "symptoms": ""
+}
+
+### Test: Error - Missing Symptoms Field
+POST {{baseUrl}}/ai/aiRecommendation
+Authorization: Bearer {{patientToken}}
+Content-Type: {{contentType}}
+
+{
+  "other_field": "some value"
+}
