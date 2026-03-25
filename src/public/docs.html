@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthSync API Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .intro {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .intro h2 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .endpoints {
+            display: grid;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .endpoint {
+            background: white;
+            border-left: 4px solid #667eea;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .endpoint.post {
+            border-left-color: #48bb78;
+        }
+
+        .endpoint.get {
+            border-left-color: #4299e1;
+        }
+
+        .method {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            margin-right: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .method.post {
+            background: #48bb78;
+        }
+
+        .method.get {
+            background: #4299e1;
+        }
+
+        .route {
+            font-family: 'Courier New', monospace;
+            background: #f7fafc;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            margin: 0.5rem 0;
+        }
+
+        .endpoint h3 {
+            margin: 0.5rem 0 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .description {
+            margin: 1rem 0;
+            color: #555;
+        }
+
+        .section {
+            margin: 1.5rem 0;
+        }
+
+        .section h4 {
+            color: #667eea;
+            margin: 1rem 0 0.5rem 0;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 0.5rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .code-block.json {
+            padding: 1rem;
+        }
+
+        .response-code {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            margin: 0 0.25rem;
+        }
+
+        .response-code.success {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .response-code.error {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        .params, .responses {
+            background: #f7fafc;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 0.5rem 0;
+        }
+
+        .param-item {
+            margin: 0.75rem 0;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .param-item:last-child {
+            border-bottom: none;
+        }
+
+        .param-name {
+            font-family: 'Courier New', monospace;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .param-type {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .param-required {
+            color: #e53e3e;
+            font-weight: bold;
+        }
+
+        .response-item {
+            margin: 0.75rem 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            background: white;
+            margin-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .base-url {
+            background: #edf2f7;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .note {
+            background: #fef5e7;
+            border-left: 4px solid #f39c12;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+
+        .note strong {
+            color: #f39c12;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>HealthSync API</h1>
+        <p>Telehealth Platform API Documentation</p>
+    </header>
+
+    <div class="container">
+        <div class="intro">
+            <h2>Getting Started</h2>
+            <p>HealthSync API provides endpoints for user authentication, profile management, and more. All requests should be made to:</p>
+            <div class="base-url">Base URL: http://localhost:3000</div>
+            <p>The API uses JWT (JSON Web Tokens) for authentication. Include the token in the Authorization header as: <code>Authorization: Bearer &lt;token&gt;</code></p>
+        </div>
+
+        <div class="endpoints">
+            <!-- Auth Service Status -->
+            <div class="endpoint get">
+                <h3>
+                    <span class="method get">GET</span>
+                    <span class="route">/auth</span>
+                </h3>
+                <div class="description">Check if the authentication service is running</div>
+
+                <div class="section">
+                    <h4>Response</h4>
+                    <span class="response-code success">200 OK</span>
+                    <div class="code-block json">
+{
+  "message": "auth service running"
+}
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h4>Example</h4>
+                    <div class="code-block">
+curl http://localhost:3000/auth
+                    </div>
+                </div>
+            </div>
+
+            <!-- Signup Endpoint -->
+            <div class="endpoint post">
+                <h3>
+                    <span class="method post">POST</span>
+                    <span class="route">/auth/signup</span>
+                </h3>
+                <div class="description">Create a new user account (patient or doctor)</div>
+
+                <div class="section">
+                    <h4>Request Body</h4>
+                    <div class="params">
+                        <div class="param-item">
+                            <span class="param-name">email</span>
+                            <span class="param-type">string</span>
+                            <span class="param-required">required</span>
+                            <div>User's email address</div>
+                        </div>
+                        <div class="param-item">
+                            <span class="param-name">username</span>
+                            <span class="param-type">string</span>
+                            <span class="param-required">required</span>
+                            <div>Unique username</div>
+                        </div>
+                        <div class="param-item">
+                            <span class="param-name">password</span>
+                            <span class="param-type">string</span>
+                            <span class="param-required">required</span>
+                            <div>User's password (will be hashed)</div>
+                        </div>
+                        <div class="param-item">
+                            <span class="param-name">first_name</span>
+                            <span class="param-type">string</span>
+                            <span class="param-required">required</span>
+                        </div>
+                        <div class="param-item">
+                            <span class="param-name">last_name</span>
+                            <span class="param-type">string</span>
+                            <span class="param-required">required</span>
+                        </div>
+                        <div class="param-item">
+                            <span class="param-name">middle_name</span>
+                            <span class="param-type">string</span>
+                            <div>Optional middle name</div>
+                        </div>
+                        <div class="param-item">
+                            <span class="param-name">phone</span>
+                            <span class="param-type">string</span>
+                            <span class="param-required">required</span>
+                            <div>Phone number with country code</div>
+                        </div>
+                        <div class="param-item">
+                            <span class="param-name">date_of_birth</span>
+                            <span class="param-type">string (YYYY-MM-DD)</span>
+                            <span class="param-required">required</span>
+                        </div>
+                        <div class="param-item">
+                            <span class="param-name">sex</span>
+                            <span class="param-type">string</span>
+                            <span class="param-required">required</span>
+                            <div>male or female</div>
+                        </div>
+                        <div class="param-item">
+                            <span class="param-name">address</span>
+                            <span class="param-type">string</span>
+                            <span class="param-required">required</span>
+                        </div>
+                        <div class="param-item">
+                            <span class="param-name">role</span>
+                            <span class="param-type">string</span>
+                            <span class="param-required">required</span>
+                            <div>patient or doctor</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h4>Request Example</h4>
+                    <div class="code-block json">
+{
+  "email": "patient@example.com",
+  "username": "johndoe",
+  "password": "SecurePassword123!",
+  "first_name": "John",
+  "last_name": "Doe",
+  "middle_name": "Michael",
+  "phone": "+234812345678",
+  "date_of_birth": "1990-05-15",
+  "sex": "male",
+  "address": "123 Health Street, Lagos, Nigeria",
+  "role": "patient"
+}
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h4>Response</h4>
+                    <span class="response-code success">201 Created</span>
+                    <div class="code-block json">
+{
+  "message": "User created successfully",
+  "user": {
+    "id": 1,
+    "email": "patient@example.com",
+    "username": "johndoe",
+    "first_name": "John",
+    "last_name": "Doe",
+    "role": "patient"
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+                    </div>
+                </div>
+
+                <div class="note">
+                    <strong>Note:</strong> A JWT token is returned on successful signup. Store this token to authenticate future requests.
+                </div>
+            </div>
+
+            <!-- Login Endpoint -->
+            <div class="endpoint post">
+                <h3>
+                    <span class="method post">POST</span>
+                    <span class="route">/auth/login</span>
+                </h3>
+                <div class="description">Authenticate user and receive JWT token</div>
+
+                <div class="section">
+                    <h4>Request Body</h4>
+                    <div class="params">
+                        <div class="param-item">
+                            <span class="param-name">email</span>
+                            <span class="param-type">string</span>
+                            <span class="param-required">required</span>
+                        </div>
+                        <div class="param-item">
+                            <span class="param-name">password</span>
+                            <span class="param-type">string</span>
+                            <span class="param-required">required</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h4>Request Example</h4>
+                    <div class="code-block json">
+{
+  "email": "patient@example.com",
+  "password": "SecurePassword123!"
+}
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h4>Response</h4>
+                    <span class="response-code success">200 OK</span>
+                    <div class="code-block json">
+{
+  "message": "Login successful",
+  "user": {
+    "id": 1,
+    "email": "patient@example.com",
+    "username": "johndoe",
+    "first_name": "John",
+    "last_name": "Doe",
+    "role": "patient"
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Get Profile Endpoint -->
+            <div class="endpoint get">
+                <h3>
+                    <span class="method get">GET</span>
+                    <span class="route">/auth/profile</span>
+                </h3>
+                <div class="description">Get authenticated user's profile information</div>
+
+                <div class="note">
+                    <strong>Authentication Required:</strong> Include JWT token in Authorization header
+                </div>
+
+                <div class="section">
+                    <h4>Headers</h4>
+                    <div class="params">
+                        <div class="param-item">
+                            <span class="param-name">Authorization</span>
+                            <span class="param-type">string</span>
+                            <span class="param-required">required</span>
+                            <div>Format: Bearer &lt;token&gt;</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h4>Request Example</h4>
+                    <div class="code-block">
+curl http://localhost:3000/auth/profile \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h4>Response</h4>
+                    <span class="response-code success">200 OK</span>
+                    <div class="code-block json">
+{
+  "message": "Profile retrieved successfully",
+  "user": {
+    "id": 1,
+    "email": "patient@example.com",
+    "username": "johndoe",
+    "first_name": "John",
+    "last_name": "Doe",
+    "middle_name": "Michael",
+    "phone": "+234812345678",
+    "date_of_birth": "1990-05-15",
+    "sex": "male",
+    "address": "123 Health Street, Lagos, Nigeria",
+    "role": "patient"
+  }
+}
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h4>Error Responses</h4>
+                    <div class="responses">
+                        <div class="response-item">
+                            <span class="response-code error">401 Unauthorized</span>
+                            <div>Missing or invalid token</div>
+                        </div>
+                        <div class="response-item">
+                            <span class="response-code error">404 Not Found</span>
+                            <div>User profile not found</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Logout Endpoint -->
+            <div class="endpoint post">
+                <h3>
+                    <span class="method post">POST</span>
+                    <span class="route">/auth/logout</span>
+                </h3>
+                <div class="description">Logout the authenticated user and invalidate session</div>
+
+                <div class="note">
+                    <strong>Authentication Required:</strong> Include JWT token in Authorization header
+                </div>
+
+                <div class="section">
+                    <h4>Headers</h4>
+                    <div class="params">
+                        <div class="param-item">
+                            <span class="param-name">Authorization</span>
+                            <span class="param-type">string</span>
+                            <span class="param-required">required</span>
+                            <div>Format: Bearer &lt;token&gt;</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h4>Request Example</h4>
+                    <div class="code-block">
+curl -X POST http://localhost:3000/auth/logout \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h4>Response</h4>
+                    <span class="response-code success">200 OK</span>
+                    <div class="code-block json">
+{
+  "message": "Logout successful. Please remove the token from client storage."
+}
+                    </div>
+                </div>
+
+                <div class="note">
+                    <strong>Note:</strong> After successful logout, remove the token from client storage (localStorage, sessionStorage, or cookies). The token remains valid on the server for its expiration period (7 days), so store security is important.
+                </div>
+            </div>
+
+            <!-- Doctor Login Endpoint -->
+            <div class="endpoint post">
+                <h3>
+                    <span class="method post">POST</span>
+                    <span class="route">/auth/doctor-login</span>
+                </h3>
+                <div class="description">Authenticate doctor and receive JWT token. Doctors are pre-registered in the system and can login with either doctor_id or email along with password.</div>
+
+                <div class="section">
+                    <h4>Request Body</h4>
+                    <div class="params">
+                        <div class="param-item">
+                            <span class="param-name">doctor_id</span>
+                            <span class="param-type">string</span>
+                            <div>Doctor's unique identifier (alternative to email)</div>
+                        </div>
+                        <div class="param-item">
+                            <span class="param-name">email</span>
+                            <span class="param-type">string</span>
+                            <div>Doctor's registered email address (alternative to doctor_id)</div>
+                        </div>
+                        <div class="param-item">
+                            <span class="param-name">password</span>
+                            <span class="param-type">string</span>
+                            <span class="param-required">required</span>
+                            <div>Doctor's password (verified against database)</div>
+                        </div>
+                    </div>
+                    <div class="note" style="margin-top: 1rem;">
+                        <strong>Note:</strong> Provide either <code>doctor_id</code> or <code>email</code>, not both. Both are optional individually, but at least one must be provided along with password.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h4>Request Examples</h4>
+                    <p><strong>Login with email:</strong></p>
+                    <div class="code-block json">
+{
+  "email": "doctor@hospital.com",
+  "password": "DoctorPassword123!"
+}
+                    </div>
+                    <p style="margin-top: 1rem;"><strong>Login with doctor_id:</strong></p>
+                    <div class="code-block json">
+{
+  "doctor_id": "DOC001",
+  "password": "DoctorPassword123!"
+}
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h4>Response</h4>
+                    <span class="response-code success">200 OK</span>
+                    <div class="code-block json">
+{
+  "message": "Doctor login successful",
+  "doctor": {
+    "doctor_id": "DOC001",
+    "email": "doctor@hospital.com",
+    "first_name": "John",
+    "last_name": "Smith",
+    "specialty": "Cardiology"
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h4>Error Responses</h4>
+                    <div class="responses">
+                        <div class="response-item">
+                            <span class="response-code error">400 Bad Request</span>
+                            <div>Missing password or both doctor_id and email</div>
+                        </div>
+                        <div class="response-item">
+                            <span class="response-code error">401 Unauthorized</span>
+                            <div>Invalid credentials (doctor_id/email or password)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="note">
+                    <strong>Note:</strong> JWT token contains doctor ID (doctor_id), email, first name, last name, and specialty. Doctors must be pre-registered in the system before they can login.
+                </div>
+            </div>
+        </div>
+
+        <div class="intro">
+            <h2>Error Handling</h2>
+            <div style="margin-top: 1rem;">
+                <strong>Common Error Responses:</strong>
+                <div class="params" style="margin-top: 1rem;">
+                    <div class="param-item">
+                        <span class="response-code error">400 Bad Request</span>
+                        <div>Missing required fields or invalid role</div>
+                    </div>
+                    <div class="param-item">
+                        <span class="response-code error">401 Unauthorized</span>
+                        <div>Invalid credentials or missing/expired token</div>
+                    </div>
+                    <div class="param-item">
+                        <span class="response-code error">500 Internal Server Error</span>
+                        <div>Server error during processing</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="intro">
+            <h2>Authentication Flow</h2>
+            <ol style="margin-left: 2rem; margin-top: 1rem; line-height: 2;">
+                <li><strong>User Signup:</strong> POST /auth/signup with user details → Receive JWT token</li>
+                <li><strong>User Login:</strong> POST /auth/login with email & password → Receive JWT token</li>
+                <li><strong>Access Protected Routes:</strong> Include token in Authorization header</li>
+                <li><strong>Get Profile:</strong> GET /auth/profile with valid token → Access user information</li>
+                <li><strong>User Logout:</strong> POST /auth/logout with token → Remove token from client storage</li>
+            </ol>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 HealthSync API. All rights reserved.</p>
+        <p style="margin-top: 1rem; font-size: 0.9rem;">Last updated: March 24, 2026</p>
+    </footer>
+</body>
+</html>

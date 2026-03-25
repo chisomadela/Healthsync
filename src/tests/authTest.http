@@ -1,0 +1,214 @@
+### HealthSync Authentication API Tests
+
+@baseUrl = http://localhost:3000
+@contentType = application/json
+
+### Test: Check Auth Service is Running
+GET {{baseUrl}}/auth
+
+### Test: Signup - Create Patient Account
+POST {{baseUrl}}/auth/signup
+Content-Type: {{contentType}}
+
+{
+    "email": "patient@example.com",
+    "username": "johndoe",
+    "password": "SecurePassword123!",
+    "first_name": "John",
+    "last_name": "Doe",
+    "middle_name": "Michael",
+    "phone": "+234812345678",
+    "date_of_birth": "1990-05-15",
+    "sex": "male",
+    "address": "123 Health Street, Lagos, Nigeria",
+    "role": "patient"
+}
+
+
+### Test: Signup - Create Doctor Account
+POST {{baseUrl}}/auth/signup
+Content-Type: {{contentType}}
+
+{
+    "email": "doctor@example.com",
+    "username": "drsmith",
+    "password": "DoctorPass123!",
+    "first_name": "Jane",
+    "last_name": "Smith",
+    "middle_name": "Marie",
+    "phone": "+234909876543",
+    "date_of_birth": "1985-03-20",
+    "sex": "female",
+    "address": "456 Medical Avenue, Abuja, Nigeria",
+    "role": "doctor"
+}
+
+### Test: Signup - Attempt With Missing Fields (Should Fail)
+POST {{baseUrl}}/auth/signup
+Content-Type: {{contentType}}
+
+{
+    "email": "incomplete@example.com",
+    "username": "incompleteuser"
+}
+
+### Test: Signup - Attempt With Invalid Role (Should Fail)
+POST {{baseUrl}}/auth/signup
+Content-Type: {{contentType}}
+
+{
+    "email": "invalidrole@example.com",
+    "username": "invaliduser",
+    "password": "Password123!",
+    "first_name": "Invalid",
+    "last_name": "User",
+    "middle_name": "Test",
+    "phone": "+234812345678",
+    "date_of_birth": "1990-05-15",
+    "sex": "male",
+    "address": "123 Test Street, Lagos, Nigeria",
+    "role": "admin"
+}
+
+### Test: Signup - Duplicate Email (Should Fail)
+POST {{baseUrl}}/auth/signup
+Content-Type: {{contentType}}
+
+{
+    "email": "patient@example.com",
+    "username": "differentuser",
+    "password": "Password123!",
+    "first_name": "Duplicate",
+    "last_name": "Email",
+    "middle_name": "Test",
+    "phone": "+234812345670",
+    "date_of_birth": "1992-07-10",
+    "sex": "female",
+    "address": "789 Duplicate Ave, Kano, Nigeria",
+    "role": "patient"
+}
+
+### Test: Login - Successful Login with Patient Account
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+    "email": "patient@example.com",
+    "password": "SecurePassword123!"
+}
+
+### Test: Login - Successful Login with Doctor Account
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+    "email": "doctor@example.com",
+    "password": "DoctorPass123!"
+}
+
+### Test: Login - Invalid Email (Should Fail)
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+    "email": "nonexistent@example.com",
+    "password": "SomePassword123!"
+}
+
+### Test: Login - Wrong Password (Should Fail)
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+    "email": "patient@example.com",
+    "password": "WrongPassword123!"
+}
+
+### Test: Login - Missing Credentials (Should Fail)
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+    "email": "patient@example.com"
+}
+
+### Test: Get Profile - Valid Token (Should Succeed)
+GET {{baseUrl}}/auth/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoicGF0aWVudEBleGFtcGxlLmNvbSIsInVzZXJuYW1lIjoiam9obmRvZSIsImlhdCI6MTc3NDM3NDk2NCwiZXhwIjoxNzc0OTc5NzY0fQ.VHNjEBDq9tGVOTUJ8frikDj0Zc94kVrRoTWJgEELbPc
+
+### Test: Get Profile - Missing Token (Should Fail)
+GET {{baseUrl}}/auth/profile
+
+### Test: Get Profile - Invalid Token (Should Fail)
+GET {{baseUrl}}/auth/profile
+Authorization: Bearer invalid_token_here
+
+### Test: Get Profile - Expired Token (Should Fail - After 7 days)
+GET {{baseUrl}}/auth/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoicGF0aWVudEBleGFtcGxlLmNvbSIsInVzZXJuYW1lIjoiam9obmRvZSIsImlhdCI6MTcwMDAwMDAwMCwiZXhwIjoxNzAwNjA0ODAwfQ.expired_token
+
+### Test: Logout - Successful Logout (Login First and Copy Token)
+# IMPORTANT: First, run "Login - Successful Login with Patient Account" test above
+# Then replace the token below with the token from the login response
+POST {{baseUrl}}/auth/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoicGF0aWVudEBleGFtcGxlLmNvbSIsInVzZXJuYW1lIjoiam9obmRvZSIsImlhdCI6MTcxNDAwMDAwMCwiZXhwIjoxNzE0NjA0ODAwfQ.placeholder
+
+### Test: Logout - Missing Token (Should Fail)
+POST {{baseUrl}}/auth/logout
+
+### Test: Logout - Invalid Token (Should Fail)
+POST {{baseUrl}}/auth/logout
+Authorization: Bearer invalid_token_here
+
+### Test: Doctor Login - Successful Login
+POST {{baseUrl}}/auth/doctor-login
+Content-Type: {{contentType}}
+
+{
+    "email": "doctor@hospital.com",
+    "password": "DoctorPassword123!"
+}
+
+### Test: Doctor Login - Login with Doctor ID
+POST {{baseUrl}}/auth/doctor-login
+Content-Type: {{contentType}}
+d
+{
+    "doctor_id": "DOC001",
+    "password": "hashed_dummy_password"
+}
+
+### Test: Doctor Login - Invalid Email (Should Fail)
+POST {{baseUrl}}/auth/doctor-login
+Content-Type: {{contentType}}
+
+{
+    "email": "nonexistent@hospital.com",
+    "password": "SomePassword123!"
+}
+
+### Test: Doctor Login - Invalid Doctor ID (Should Fail)
+POST {{baseUrl}}/auth/doctor-login
+Content-Type: {{contentType}}
+
+{
+    "doctor_id": "INVALID_ID",
+    "password": "SomePassword123!"
+}
+
+### Test: Doctor Login - Wrong Password (Should Fail)
+POST {{baseUrl}}/auth/doctor-login
+Content-Type: {{contentType}}
+
+{
+    "email": "doctor@hospital.com",
+    "password": "WrongPassword123!"
+}
+
+### Test: Doctor Login - Missing Credentials (Should Fail)
+POST {{baseUrl}}/auth/doctor-login
+Content-Type: {{contentType}}
+
+{
+    "email": "doctor@hospital.com"
+}

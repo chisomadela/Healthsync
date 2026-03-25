@@ -1,0 +1,34 @@
+{
+  "name": "healthsync",
+  "version": "1.0.0",
+  "description": "HealthSync is a telehealth platform that connects users to doctors for online consultations, medication access, emergency support, and health tracking optimized for accessibility in Nigeria.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hakisolos/Healthsync.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hakisolos/Healthsync/issues"
+  },
+  "homepage": "https://github.com/hakisolos/Healthsync#readme",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.100.0",
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "nodemon": "^3.1.14"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0"
+  }
+}
