@@ -1,6 +1,6 @@
 ### HealthSync Authentication API Tests
 
-@baseUrl = http://localhost:3000
+@baseUrl = http://localhost:3001
 @contentType = application/json
 
 ### Test: Check Auth Service is Running

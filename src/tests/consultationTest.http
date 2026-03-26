@@ -1,0 +1,60 @@
+### Consultation API Endpoints Test File
+
+# Define variables for easier testing
+@baseUrl = http://localhost:3001
+@token = Bearer YOUR_JWT_TOKEN_HERE
+@doctor_id = doc_123
+@patient_id = patient_id_uuid
+@consultationId = consultation_id_here
+
+###
+## Get consultation service status
+GET {{baseUrl}}/consultation/
+
+###
+## Create a new consultation
+## This endpoint automatically queues the consultation after the doctor's last one
+## with a buffer Time (default 30 minutes)
+POST {{baseUrl}}/consultation/create
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "doctor_id": "{{doctor_id}}",
+  "patient_id": "{{patient_id}}",
+  "description": "Patient consultation for headache symptoms",
+  "bufferMinutes": 30
+}
+
+###
+## Get all pending consultations for a doctor
+GET {{baseUrl}}/consultation/doctor/{{doctor_id}}/pending
+Authorization: {{token}}
+
+###
+## Get all consultations for a doctor (all statuses) in chronological order
+## Returns summary with counts and consultations organized by status
+GET {{baseUrl}}/consultation/doctor/{{doctor_id}}/all
+Authorization: {{token}}
+
+###
+## Get consultation queue for a doctor
+## Shows all pending and ongoing consultations in order
+GET {{baseUrl}}/consultation/doctor/{{doctor_id}}/queue
+Authorization: {{token}}
+
+###
+## Get a specific consultation by ID
+GET {{baseUrl}}/consultation/{{consultationId}}
+Authorization: {{token}}
+
+###
+## End a consultation (Doctor only)
+## Doctor marks the consultation as ended
+POST {{baseUrl}}/consultation/{{consultationId}}/end
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "doctor_id": "{{doctor_id}}"
+}
