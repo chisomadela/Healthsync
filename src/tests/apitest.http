@@ -1,6 +1,6 @@
 ### HealthSync AI Recommendation API Tests
 
-@baseUrl = http://localhost:3000
+@baseUrl = http://localhost:3001
 @contentType = application/json
 
 ### Test: Check AI Service is Running

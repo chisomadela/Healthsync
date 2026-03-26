@@ -1,6 +1,6 @@
 ### Test AI Recommendation Endpoint
 
-@baseUrl = http://localhost:3000
+@baseUrl = http://localhost:3001
 @patientToken = your_patient_jwt_token_here
 
 # First, signup/login as a patient to get a token
